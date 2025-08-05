@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up</title>
+</head>
+<body>
+  <h2>Sign Up</h2>
+  <form id="signupForm">
+    <input type="text" id="name" placeholder="Name" required /><br /><br />
+    <input type="email" id="email" placeholder="Email" required /><br /><br />
+    <input type="text" id="phone" placeholder="Phone Number" required /><br /><br />
+    <input type="password" id="password" placeholder="Password" required /><br /><br />
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <p id="responseMsg"></p>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const responseMsg = document.getElementById('responseMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        password: form.password.value,
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          responseMsg.style.color = 'green';
+          responseMsg.textContent = result.message;
+          form.reset();
+        } else {
+          responseMsg.style.color = 'red';
+          responseMsg.textContent = result.message || 'Signup failed';
+        }
+      } catch (err) {
+        responseMsg.style.color = 'red';
+        responseMsg.textContent = 'Server error. Try again later.';
+      }
+    });
+  </script>
+</body>
+</html>
